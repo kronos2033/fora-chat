@@ -1,15 +1,19 @@
 .chat {
- width: 100vw;
-  height: 100vh;
   display: grid;
   grid-template-columns: 1fr 4fr;
 }
 
-.chat__messages{
+.chat__container {
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  justify-content: flex-end
+  height: 100vh;
+}
+
+.chat_messages {
+  min-height: 80vh;
+  overflow: auto;
 }
 
 .chat__form {
@@ -18,5 +22,4 @@
 
 .chat__input {
   flex-grow: 1;
-  align-self: flex-end;
 }

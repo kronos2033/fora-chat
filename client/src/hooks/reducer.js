@@ -7,15 +7,21 @@ export default (state, action) => {
         chatId: action.payload.chatId,
         username: action.payload.username,
       };
+    case 'set data':
+      return {
+        ...state,
+        users: action.payload.users,
+        messages: action.payload.messages,
+      };
     case 'set users':
       return {
         ...state,
         users: action.payload,
       };
-    case 'set messages':
+    case 'new messages':
       return {
         ...state,
-        messages: action.payload,
+        messages: [...state.messages, action.payload],
       };
 
     default:

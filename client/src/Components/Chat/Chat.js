@@ -1,15 +1,38 @@
 import './Chat.css';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Message from '../Message/Message';
 import Users from '../Users/Users';
+import socket from '../../utils/socket';
 
-export default function Chat({ users, messages }) {
-  const [message, setMessage] = useState('  ');
+export default function Chat({
+  users,
+  messages,
+  username,
+  chatId,
+  sendMessage,
+}) {
+  const [messageText, setMessageText] = useState('');
+  const messagesRef = useRef(null);
 
-  const handleChange = (e) => setMessage(e.target.values);
+  useEffect(() => {
+    messagesRef.current.scrollTo(0, 9999999);
+  }, [messages]);
+  const handleChange = (e) => {
+    setMessageText(e.target.value);
+  };
 
-  const handleSend = () => {};
+  const handleSend = (e) => {
+    e.preventDefault();
+    socket.emit('new message', {
+      username,
+      text: messageText,
+      chatId,
+    });
+    sendMessage({ username, text: messageText });
+    setMessageText('');
+  };
+
   return (
     <div className='chat'>
       <div className='chat__users'>
@@ -18,15 +41,19 @@ export default function Chat({ users, messages }) {
           return <Users key={index} name={name} />;
         })}
       </div>
-      <div className='chat__messages'>
-        {messages.map((message, index) => {
-          return <Message key={index} message={message} />;
-        })}
-        <form className='chat__form'>
+      <div className='chat__container'>
+        <h2 className='chat__title'>{`Чат ${chatId}`}</h2>
+        <div className='chat_messages' ref={messagesRef}>
+          {messages.map((message, index) => {
+            console.log(message);
+            return <Message key={index} message={message} />;
+          })}
+        </div>
+        <form className='chat__form' onSubmit={handleSend}>
           <input
             className='chat__input'
+            value={messageText}
             onChange={handleChange}
-            value={message}
           />
           <button className='btn chat__btn' onClick={handleSend}>
             Отправить

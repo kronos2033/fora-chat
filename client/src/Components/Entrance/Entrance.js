@@ -7,6 +7,7 @@ export default function Entrance({ onJoin }) {
   const [username, setUsername] = useState('');
   const validData = !(chatId && username);
   const obj = { chatId, username };
+
   const handleChangeUsername = (e) => setUsername(e.target.value);
 
   const handleChangeChatId = (e) => setChatId(e.target.value);
@@ -14,7 +15,6 @@ export default function Entrance({ onJoin }) {
   const onSendData = async (e) => {
     e.preventDefault();
     await axios.post('/chats', obj);
-    console.log(obj);
     onJoin(obj);
   };
 
@@ -27,13 +27,13 @@ export default function Entrance({ onJoin }) {
             placeholder='chat ID'
             value={chatId}
             onChange={handleChangeChatId}
-          ></input>
+          />
           <input
             className='entrance__input'
             placeholder='Ваше имя'
             value={username}
             onChange={handleChangeUsername}
-          ></input>
+          />
           <button
             className={`btn entrance__btn ${
               validData && 'entrance__btn_type_inactive'

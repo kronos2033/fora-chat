@@ -15,9 +15,12 @@ function App() {
     users: [],
     messages: [],
   });
+
   useEffect(() => {
     socket.on('update user', setUsers);
+    socket.on('new message', addMessage);
   }, []);
+
   const setUsers = (users) => {
     dispatch({
       type: 'set users',
@@ -25,6 +28,12 @@ function App() {
     });
   };
 
+  const addMessage = (message) => {
+    dispatch({
+      type: 'new messages',
+      payload: message,
+    });
+  };
   const onJoin = async (obj) => {
     dispatch({
       type: 'join',
@@ -32,14 +41,18 @@ function App() {
     });
     socket.emit('join user', obj);
     const { data } = await axios.get(`/chats/${obj.chatId}`);
-    setUsers(data.users);
+    dispatch({ type: 'set data', payload: data });
   };
 
   window.socket = socket;
 
   return (
     <div>
-      {!state.joined ? <Entrance onJoin={onJoin} /> : <Chat {...state} />}
+      {!state.joined ? (
+        <Entrance onJoin={onJoin} />
+      ) : (
+        <Chat {...state} sendMessage={addMessage} />
+      )}
     </div>
   );
 }
@@ -47,5 +60,6 @@ function App() {
 export default App;
 
 //TODO try,catch
-// axios
+// axios, ??io.to(room).emit('event', data)
 // refactor file structure
+// my message to right

@@ -42,12 +42,22 @@ app.post("/chats", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join user", ({ chatId, username }) => {
-    console.log(chatId, username);
     socket.join(chatId);
     chats.get(chatId).get("users").set(socket.id, username);
     const users = [...chats.get(chatId).get("users").values()];
     socket.broadcast.to(chatId).emit("update user", users);
   });
+
+  socket.on("new message", ({ chatId, username, text }) => {
+    const obj = {
+      username,
+      text,
+    };
+    chats.get(chatId).get("messages").push(obj);
+    socket.broadcast.to(chatId).emit("new message", obj);
+    // io.in(roomId).emit("new message", obj);
+  });
+
   socket.on("disconnect", () => {
     chats.forEach((value, chatId) => {
       if (value.get("users").delete(socket.id)) {
