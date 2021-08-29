@@ -1,0 +1,22 @@
+.chat {
+ width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+.chat__messages{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-content: flex-end
+}
+
+.chat__form {
+  display: flex;
+}
+
+.chat__input {
+  flex-grow: 1;
+  align-self: flex-end;
+}

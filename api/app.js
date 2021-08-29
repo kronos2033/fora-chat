@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-app.use(express.json());
+
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
   cors: {
@@ -11,15 +11,25 @@ const io = require("socket.io")(server, {
     credentials: true,
   },
 });
+app.use(express.json());
+const chats = new Map();
 
-const rooms = new Map();
+app.get("/chats/:id", (req, res) => {
+  const { id: chatId } = req.params;
 
-app.get("/rooms", (req, res) => res.send(rooms));
+  const obj = chats.has(chatId)
+    ? {
+        users: [...chats.get(chatId).get("users").values()],
+        messages: [...chats.get(chatId).get("messages").values()],
+      }
+    : { users: [], messages: [] };
+  res.send(obj);
+});
 
-app.post("/rooms", (req, res) => {
-  const { chatId, username } = req.body;
-  if (!rooms.has(chatId)) {
-    rooms.set(
+app.post("/chats", (req, res) => {
+  const { chatId } = req.body;
+  if (!chats.has(chatId)) {
+    chats.set(
       chatId,
       new Map([
         ["users", new Map()],
@@ -27,11 +37,25 @@ app.post("/rooms", (req, res) => {
       ])
     );
   }
-  res.json([...rooms.keys()]);
+  res.json([...chats.keys()]);
 });
 
 io.on("connection", (socket) => {
-  console.log("user connected", socket.id);
+  socket.on("join user", ({ chatId, username }) => {
+    console.log(chatId, username);
+    socket.join(chatId);
+    chats.get(chatId).get("users").set(socket.id, username);
+    const users = [...chats.get(chatId).get("users").values()];
+    socket.broadcast.to(chatId).emit("update user", users);
+  });
+  socket.on("disconnect", () => {
+    chats.forEach((value, chatId) => {
+      if (value.get("users").delete(socket.id)) {
+        const users = [...value.get("users").values()];
+        socket.broadcast.to(chatId).emit("update user", users);
+      }
+    });
+  });
 });
 
 server.listen(9999, () => {
