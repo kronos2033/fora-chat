@@ -13,15 +13,15 @@ export default (state, action) => {
         users: action.payload.users,
         messages: action.payload.messages,
       };
-    case 'set users':
-      return {
-        ...state,
-        users: action.payload,
-      };
     case 'new messages':
       return {
         ...state,
         messages: [...state.messages, action.payload],
+      };
+    case 'disconnect user':
+      return {
+        ...state,
+        users: action.payload,
       };
 
     default:

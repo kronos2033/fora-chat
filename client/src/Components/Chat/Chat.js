@@ -5,13 +5,7 @@ import Message from '../Message/Message';
 import Users from '../Users/Users';
 import socket from '../../utils/socket';
 
-export default function Chat({
-  users,
-  messages,
-  username,
-  chatId,
-  sendMessage,
-}) {
+export default function Chat({ users, messages, username, chatId }) {
   const [messageText, setMessageText] = useState('');
   const messagesRef = useRef(null);
 
@@ -29,7 +23,6 @@ export default function Chat({
       text: messageText,
       chatId,
     });
-    sendMessage({ username, text: messageText });
     setMessageText('');
   };
 
@@ -45,8 +38,13 @@ export default function Chat({
         <h2 className='chat__title'>{`Чат ${chatId}`}</h2>
         <div className='chat_messages' ref={messagesRef}>
           {messages.map((message, index) => {
-            console.log(message);
-            return <Message key={index} message={message} />;
+            const messageStyle =
+              message.username === username
+                ? { alignSelf: 'flex-end', alignItems: 'flex-end' }
+                : { alignSelf: 'flex-start', alignItems: 'flex-start' };
+            return (
+              <Message key={index} message={message} style={messageStyle} />
+            );
           })}
         </div>
         <form className='chat__form' onSubmit={handleSend}>
@@ -54,6 +52,7 @@ export default function Chat({
             className='chat__input'
             value={messageText}
             onChange={handleChange}
+            autoFocus
           />
           <button className='btn chat__btn' onClick={handleSend}>
             Отправить

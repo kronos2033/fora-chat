@@ -17,14 +17,22 @@ function App() {
   });
 
   useEffect(() => {
-    socket.on('update user', setUsers);
+    socket.on('join in chat', connectUser);
     socket.on('new message', addMessage);
+    socket.on('disconnect user', disconnectUser);
   }, []);
 
-  const setUsers = (users) => {
+  const connectUser = (obj) => {
     dispatch({
-      type: 'set users',
-      payload: users,
+      type: 'set data',
+      payload: obj,
+    });
+  };
+
+  const disconnectUser = (user) => {
+    dispatch({
+      type: 'disconnect user',
+      payload: user,
     });
   };
 
@@ -34,32 +42,22 @@ function App() {
       payload: message,
     });
   };
-  const onJoin = async (obj) => {
+  const onJoinUser = async (obj) => {
     dispatch({
       type: 'join',
       payload: obj,
     });
     socket.emit('join user', obj);
-    const { data } = await axios.get(`/chats/${obj.chatId}`);
-    dispatch({ type: 'set data', payload: data });
   };
-
-  window.socket = socket;
 
   return (
     <div>
-      {!state.joined ? (
-        <Entrance onJoin={onJoin} />
-      ) : (
-        <Chat {...state} sendMessage={addMessage} />
-      )}
+      {!state.joined ? <Entrance onJoin={onJoinUser} /> : <Chat {...state} />}
     </div>
   );
 }
 
 export default App;
 
-//TODO try,catch
-// axios, ??io.to(room).emit('event', data)
 // refactor file structure
 // my message to right

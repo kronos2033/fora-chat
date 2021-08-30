@@ -14,8 +14,12 @@ export default function Entrance({ onJoin }) {
 
   const onSendData = async (e) => {
     e.preventDefault();
-    await axios.post('/chats', obj);
-    onJoin(obj);
+    try {
+      await axios.post('/chats', obj);
+      onJoin(obj);
+    } catch (e) {
+      console.log(`Произошла ошибка, ${e}`);
+    }
   };
 
   return (

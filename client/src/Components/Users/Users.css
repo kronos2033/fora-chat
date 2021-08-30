@@ -1,12 +1,15 @@
+.users {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .users__name {
+  text-align: center;
   font-weight: 600;
-  width: fit-content;
-  padding: 10px;
-  margin: 10px;
-  background-color: rgb(104, 100, 100);
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
+  width: 75px;
+  max-width: 150px;
+  text-align: center;
+  margin: 15px 10px 10px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(75, 138, 255, 0.5);;
 }

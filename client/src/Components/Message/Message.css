@@ -1,15 +1,18 @@
 .message {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
   width: fit-content;
 }
 
-.message__text{
+.message__text {
   width: auto;
-  padding:10px;
+  padding: 10px;
   margin: 5px 0;
-  background-color:rgba(75,138,255,.1);
-  border-radius: 10px ;
-  -moz-border-radius: 10px ;
-  -ms-border-radius: 10px ;
-  -o-border-radius: 10px ;
-  -webkit-border-radius: 10px ;
+  background-color: rgba(75, 138, 255, 0.1);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
