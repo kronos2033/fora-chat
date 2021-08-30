@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import reducer from '../../hooks/reducer';
-import Entrance from '../Entrance/Entrance';
-import Chat from '../Chat/Chat';
 import socket from '../../utils/socket';
-import axios from 'axios';
+import Chat from '../Chat/Chat';
+import Entrance from '../Entrance/Entrance';
 import './App.css';
 
 function App() {
@@ -58,6 +57,3 @@ function App() {
 }
 
 export default App;
-
-// refactor file structure
-// my message to right

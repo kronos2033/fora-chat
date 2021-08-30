@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Entrance.css';
 
-export default function Entrance({ onJoin }) {
+export default function autofocusEntrance({ onJoin }) {
   const [chatId, setChatId] = useState('');
   const [username, setUsername] = useState('');
   const validData = !(chatId && username);

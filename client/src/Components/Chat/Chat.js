@@ -8,7 +8,6 @@ import socket from '../../utils/socket';
 export default function Chat({ users, messages, username, chatId }) {
   const [messageText, setMessageText] = useState('');
   const messagesRef = useRef(null);
-
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
