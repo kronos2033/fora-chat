@@ -16,11 +16,11 @@ const chats = new Map();
 
 app.get("/", (req, res) => res.send(obj));
 
-app.post("/chats", (req, res) => {
-  const { chatId } = req.body;
-  if (!chats.has(chatId)) {
+app.post("/chats/:id", (req, res) => {
+  const { id } = req.params;
+  if (!chats.has(id)) {
     chats.set(
-      chatId,
+      id,
       new Map([
         ["users", new Map()],
         ["messages", []],
@@ -32,31 +32,38 @@ app.post("/chats", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join user", ({ chatId, username }) => {
-    console.log(socket.id);
-    socket.join(chatId);
-    chats.get(chatId).get("users").set(socket.id, username);
+    const id = `${chatId}`;
+    if (!username) {
+      username = `Гость ${String(socket.id).slice(-2)}`;
+    }
+    socket.join(id);
+    chats.get(id).get("users").set(socket.id, username);
     const obj = {
-      users: [...chats.get(chatId).get("users").values()],
-      messages: [...chats.get(chatId).get("messages").values()],
+      users: [...chats.get(id).get("users").values()],
+      messages: [...chats.get(id).get("messages").values()],
+      username,
     };
-    io.in(chatId).emit("join in chat", obj);
+    io.in(id).emit("join in chat", obj);
   });
 
   socket.on("new message", ({ chatId, username, text, time }) => {
+    console.log(chatId);
+    const id = `${chatId}`;
     const obj = {
       username,
       text,
       time,
     };
-    chats.get(chatId).get("messages").push(obj);
-    io.in(chatId).emit("new message", obj);
+    chats.get(id).get("messages").push(obj);
+    io.in(id).emit("new message", obj);
   });
 
   socket.on("disconnect", () => {
     chats.forEach((value, chatId) => {
+      let id = `${chatId}`;
       if (value.get("users").delete(socket.id)) {
         const users = [...value.get("users").values()];
-        io.in(chatId).emit("disconnect user", users);
+        io.in(id).emit("disconnect user", users);
       }
     });
   });

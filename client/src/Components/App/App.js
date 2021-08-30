@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useReducer } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import reducer from '../../hooks/reducer';
 import socket from '../../utils/socket';
 import Chat from '../Chat/Chat';
@@ -24,6 +24,7 @@ function App() {
   }, []);
 
   const connectUser = (obj) => {
+    console.log(obj);
     dispatch({
       type: 'set data',
       payload: obj,
@@ -45,6 +46,7 @@ function App() {
   };
 
   const joinUser = async (obj) => {
+    console.log('joinUser');
     dispatch({
       type: 'join',
       payload: obj,
@@ -56,10 +58,10 @@ function App() {
     <Router>
       <div>
         <Route exact path='/'>
-          <Entrance onJoin={joinUser} />{' '}
+          <Entrance onJoin={joinUser} />
         </Route>
-        <Route path={`/${state.chatId}`}>
-          <Chat {...state} connect={connectUser} />
+        <Route path='/chats'>
+          <Chat {...state} onLink={joinUser} connect={connectUser} />
         </Route>
       </div>
     </Router>

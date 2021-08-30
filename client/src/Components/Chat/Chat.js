@@ -4,8 +4,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import Message from '../Message/Message';
 import Users from '../Users/Users';
 import socket from '../../utils/socket';
-
-export default function Chat({ users, messages, username, chatId }) {
+import axios from 'axios';
+export default function Chat({
+  joined,
+  users,
+  messages,
+  username,
+  chatId,
+  onLink,
+}) {
   const [messageText, setMessageText] = useState('');
   const messagesRef = useRef(null);
   const date = new Date();
@@ -17,6 +24,14 @@ export default function Chat({ users, messages, username, chatId }) {
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
+  console.log('users', users.length);
+  useEffect(async () => {
+    if (!joined) {
+      const chatId = parseInt(location.pathname.match(/\d+/));
+      await axios.post(`/chats/${chatId}`);
+      onLink({ chatId, username: `Гость ${String(socket.id).slice(-2)}` });
+    }
+  }, []);
 
   const handleChange = (e) => {
     setMessageText(e.target.value);

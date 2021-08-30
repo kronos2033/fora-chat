@@ -17,9 +17,9 @@ export default function autofocusEntrance({ onJoin }) {
   const onSendData = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/chats', obj);
+      await axios.post(`/chats/${chatId}`);
       onJoin(obj);
-      history.push(`/${chatId}`);
+      history.push(`/chats/${chatId}`);
     } catch (e) {
       console.log(`Произошла ошибка, ${e}`);
     }
