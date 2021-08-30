@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './Entrance.css';
 
@@ -7,6 +8,7 @@ export default function autofocusEntrance({ onJoin }) {
   const [username, setUsername] = useState('');
   const validData = !(chatId && username);
   const obj = { chatId, username };
+  const history = useHistory();
 
   const handleChangeUsername = (e) => setUsername(e.target.value);
 
@@ -17,6 +19,7 @@ export default function autofocusEntrance({ onJoin }) {
     try {
       await axios.post('/chats', obj);
       onJoin(obj);
+      history.push(`/${chatId}`);
     } catch (e) {
       console.log(`Произошла ошибка, ${e}`);
     }

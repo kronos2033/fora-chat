@@ -8,9 +8,16 @@ import socket from '../../utils/socket';
 export default function Chat({ users, messages, username, chatId }) {
   const [messageText, setMessageText] = useState('');
   const messagesRef = useRef(null);
+  const date = new Date();
+  const currentTime = `${date.getHours()} : ${
+    String(date.getMinutes()).length == 1
+      ? '0' + date.getMinutes()
+      : date.getMinutes()
+  }`;
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
+
   const handleChange = (e) => {
     setMessageText(e.target.value);
   };
@@ -21,6 +28,7 @@ export default function Chat({ users, messages, username, chatId }) {
       username,
       text: messageText,
       chatId,
+      time: currentTime,
     });
     setMessageText('');
   };
@@ -37,12 +45,14 @@ export default function Chat({ users, messages, username, chatId }) {
         <h2 className='chat__title'>{`Чат ${chatId}`}</h2>
         <div className='chat_messages' ref={messagesRef}>
           {messages.map((message, index) => {
-            const messageStyle =
-              message.username === username
-                ? { alignSelf: 'flex-end', alignItems: 'flex-end' }
-                : { alignSelf: 'flex-start', alignItems: 'flex-start' };
+            const messageOwner = message.username === username;
             return (
-              <Message key={index} message={message} style={messageStyle} />
+              <Message
+                key={index}
+                message={message}
+                owner={messageOwner}
+                time={message.time}
+              />
             );
           })}
         </div>

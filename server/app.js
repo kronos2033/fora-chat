@@ -32,6 +32,7 @@ app.post("/chats", (req, res) => {
 
 io.on("connection", (socket) => {
   socket.on("join user", ({ chatId, username }) => {
+    console.log(socket.id);
     socket.join(chatId);
     chats.get(chatId).get("users").set(socket.id, username);
     const obj = {
@@ -41,10 +42,11 @@ io.on("connection", (socket) => {
     io.in(chatId).emit("join in chat", obj);
   });
 
-  socket.on("new message", ({ chatId, username, text }) => {
+  socket.on("new message", ({ chatId, username, text, time }) => {
     const obj = {
       username,
       text,
+      time,
     };
     chats.get(chatId).get("messages").push(obj);
     io.in(chatId).emit("new message", obj);

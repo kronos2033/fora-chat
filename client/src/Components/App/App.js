@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useReducer } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import reducer from '../../hooks/reducer';
 import socket from '../../utils/socket';
 import Chat from '../Chat/Chat';
 import Entrance from '../Entrance/Entrance';
+
 import './App.css';
 
 function App() {
@@ -41,7 +43,8 @@ function App() {
       payload: message,
     });
   };
-  const onJoinUser = async (obj) => {
+
+  const joinUser = async (obj) => {
     dispatch({
       type: 'join',
       payload: obj,
@@ -50,10 +53,19 @@ function App() {
   };
 
   return (
-    <div>
-      {!state.joined ? <Entrance onJoin={onJoinUser} /> : <Chat {...state} />}
-    </div>
+    <Router>
+      <div>
+        <Route exact path='/'>
+          <Entrance onJoin={joinUser} />{' '}
+        </Route>
+        <Route path={`/${state.chatId}`}>
+          <Chat {...state} connect={connectUser} />
+        </Route>
+      </div>
+    </Router>
   );
 }
 
 export default App;
+
+//todo date
