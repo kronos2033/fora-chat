@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import { currentTime } from '../../utils/constants';
 import socket from '../../utils/socket';
 import Message from '../Message/Message';
 import StartStream from '../StartStream/StartStream';
@@ -18,12 +19,7 @@ export default function Chat({
 }) {
   const [messageText, setMessageText] = useState('');
   const messagesRef = useRef(null);
-  const date = new Date();
-  const currentTime = `${date.getHours()} : ${
-    String(date.getMinutes()).length == 1
-      ? '0' + date.getMinutes()
-      : date.getMinutes()
-  }`;
+  const [streamerName, setStreamerName] = useState('');
 
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
@@ -64,13 +60,13 @@ export default function Chat({
           return <Users key={index} name={name} />;
         })}
         <ViewStream />
-        <VideoContainer />
+        <VideoContainer name={streamerName} />
       </div>
       <div className='chat__container'>
         <h2 className='chat__title'>
           {`Чат ${chatId}`}
           <button className='chat__copy' onClick={handleCopyLink} />
-          <StartStream />
+          <StartStream streamerName={setStreamerName} username={username} />
         </h2>
         <div className='chat_messages' ref={messagesRef}>
           {messages.map((message, index) => {

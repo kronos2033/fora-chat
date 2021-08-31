@@ -18,7 +18,6 @@ export default function ViewStream() {
     });
     peer.ontrack = handleTrackEvent;
     peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer);
-
     return peer;
   }
 
@@ -28,14 +27,13 @@ export default function ViewStream() {
     const payload = {
       sdp: peer.localDescription,
     };
-
     const { data } = await axios.post('/consumer', payload);
     const desc = new RTCSessionDescription(data.sdp);
     peer.setRemoteDescription(desc).catch((e) => console.log(e));
   }
 
   function handleTrackEvent(e) {
-    document.getElementById('video').srcObject = e.streams[0];
+    document.querySelector('#video').srcObject = e.streams[0];
   }
   return (
     <div className='view-stream'>

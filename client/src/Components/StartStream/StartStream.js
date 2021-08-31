@@ -3,12 +3,13 @@ import axios from 'axios';
 
 import React from 'react';
 
-export default function StartStream() {
+export default function StartStream({ streamerName, username }) {
   async function startStream() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    document.getElementById('video').srcObject = stream;
+    document.querySelector('#video').srcObject = stream;
     const peer = createPeer();
     stream.getTracks().forEach((track) => peer.addTrack(track, stream));
+    streamerName(username);
   }
 
   function createPeer() {
@@ -20,7 +21,6 @@ export default function StartStream() {
       ],
     });
     peer.onnegotiationneeded = () => handleNegotiationNeededEvent(peer);
-
     return peer;
   }
 
@@ -30,11 +30,11 @@ export default function StartStream() {
     const payload = {
       sdp: peer.localDescription,
     };
-
     const { data } = await axios.post('/broadcast', payload);
     const desc = new RTCSessionDescription(data.sdp);
     peer.setRemoteDescription(desc).catch((e) => console.log(e));
   }
+
   return (
     <div className='stream'>
       <button className='stream__btn' onClick={startStream} />

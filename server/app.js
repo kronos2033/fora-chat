@@ -2,9 +2,8 @@ const express = require("express");
 
 const app = express();
 
-let senderStream;
 const server = require("http").Server(app);
-const webrtc = require("wrtc");
+const router = require("./routes/webrtc");
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -15,8 +14,6 @@ const io = require("socket.io")(server, {
 });
 app.use(express.json());
 const chats = new Map();
-
-app.get("/", (req, res) => res.send(obj));
 
 app.post("/chats/:id", (req, res) => {
   const { id } = req.params;
@@ -32,51 +29,7 @@ app.post("/chats/:id", (req, res) => {
   res.json([...chats.keys()]);
 });
 
-app.post("/broadcast", async ({ body }, res) => {
-  const peer = new webrtc.RTCPeerConnection({
-    iceServers: [
-      {
-        urls: "stun:stun.stunprotocol.org",
-      },
-    ],
-  });
-  peer.ontrack = (e) => handleTrackEvent(e, peer);
-  const desc = new webrtc.RTCSessionDescription(body.sdp);
-  await peer.setRemoteDescription(desc);
-  const answer = await peer.createAnswer();
-  await peer.setLocalDescription(answer);
-  const payload = {
-    sdp: peer.localDescription,
-  };
-
-  res.json(payload);
-});
-
-app.post("/consumer", async ({ body }, res) => {
-  const peer = new webrtc.RTCPeerConnection({
-    iceServers: [
-      {
-        urls: "stun:stun.stunprotocol.org",
-      },
-    ],
-  });
-  const desc = new webrtc.RTCSessionDescription(body.sdp);
-  await peer.setRemoteDescription(desc);
-  senderStream
-    .getTracks()
-    .forEach((track) => peer.addTrack(track, senderStream));
-  const answer = await peer.createAnswer();
-  await peer.setLocalDescription(answer);
-  const payload = {
-    sdp: peer.localDescription,
-  };
-
-  res.json(payload);
-});
-
-function handleTrackEvent(e, peer) {
-  senderStream = e.streams[0];
-}
+app.use(router);
 
 io.on("connection", (socket) => {
   socket.on("join user", ({ chatId, username }) => {
