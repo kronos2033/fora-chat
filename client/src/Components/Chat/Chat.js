@@ -33,6 +33,11 @@ export default function Chat({
     }
   }, []);
 
+  const handleCopyLink = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl);
+  };
+
   const handleChange = (e) => {
     setMessageText(e.target.value);
   };
@@ -57,7 +62,10 @@ export default function Chat({
         })}
       </div>
       <div className='chat__container'>
-        <h2 className='chat__title'>{`Чат ${chatId}`}</h2>
+        <h2 className='chat__title'>
+          {`Чат ${chatId}`}
+          <button className='chat__copy' onClick={handleCopyLink} />
+        </h2>
         <div className='chat_messages' ref={messagesRef}>
           {messages.map((message, index) => {
             const messageOwner = message.username === username;

@@ -18,6 +18,20 @@
   background-color: #346cfa;
   box-shadow: 0px 2px 4px  grey
 }
+.chat__copy {
+  background-color: transparent;
+  background: url(../../img/copy.svg);
+  width: 15px;
+  height: 15px;
+  outline: none;
+  border: none;
+  margin-left: 5px;
+}
+
+.chat__copy:hover{
+  cursor: pointer;
+  opacity: 0.8;
+}
 
 .chat_messages {
   display: flex;
