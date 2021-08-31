@@ -1,0 +1,9 @@
+.view-stream__btn {
+  background: url(../../img/watch.svg);
+  background-color: transparent;
+  width: 24px;
+  height: 24px;
+  outline: none;
+  border: none;
+  margin-left: 5px;
+}

@@ -1,6 +1,5 @@
-import './Users.css';
-
 import React from 'react';
+import './Users.css';
 
 export default function Users({ name }) {
   return (

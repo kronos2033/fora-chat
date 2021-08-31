@@ -1,0 +1,20 @@
+.stream {
+  margin-left: 100px;
+  width: 25px;
+  height: 25px;
+}
+.stream__btn {
+  background: url(../../img/stream.svg);
+  background-color: transparent;
+  width: 25px;
+  height: 25px;
+  outline: none;
+  border: none;
+  margin-left: 5px;
+}
+
+.stream__btn:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+

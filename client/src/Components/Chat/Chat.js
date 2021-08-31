@@ -1,10 +1,13 @@
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import socket from '../../utils/socket';
+import Message from '../Message/Message';
+import StartStream from '../StartStream/StartStream';
+import Users from '../Users/Users';
+import ViewStream from '../ViewStream/ViewStream';
+import VideoContainer from '../VideoContainer/VideoContainer';
 import './Chat.css';
 
-import React, { useState, useRef, useEffect } from 'react';
-import Message from '../Message/Message';
-import Users from '../Users/Users';
-import socket from '../../utils/socket';
-import axios from 'axios';
 export default function Chat({
   joined,
   users,
@@ -21,10 +24,10 @@ export default function Chat({
       ? '0' + date.getMinutes()
       : date.getMinutes()
   }`;
+
   useEffect(() => {
     messagesRef.current.scrollTo(0, 9999999);
   }, [messages]);
-  console.log('users', users.length);
   useEffect(async () => {
     if (!joined) {
       const chatId = parseInt(location.pathname.match(/\d+/));
@@ -60,11 +63,14 @@ export default function Chat({
         {users.map((name, index) => {
           return <Users key={index} name={name} />;
         })}
+        <ViewStream />
+        <VideoContainer />
       </div>
       <div className='chat__container'>
         <h2 className='chat__title'>
           {`Чат ${chatId}`}
           <button className='chat__copy' onClick={handleCopyLink} />
+          <StartStream />
         </h2>
         <div className='chat_messages' ref={messagesRef}>
           {messages.map((message, index) => {

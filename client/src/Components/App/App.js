@@ -24,7 +24,6 @@ function App() {
   }, []);
 
   const connectUser = (obj) => {
-    console.log(obj);
     dispatch({
       type: 'set data',
       payload: obj,
@@ -46,7 +45,6 @@ function App() {
   };
 
   const joinUser = async (obj) => {
-    console.log('joinUser');
     dispatch({
       type: 'join',
       payload: obj,
